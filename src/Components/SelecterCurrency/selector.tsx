@@ -12,11 +12,11 @@ export function CurrencySelector({ currency, setCurrency, options }: CurrencySel
     <Box sx={{ minWidth: 200 }}>
       <Autocomplete
         value={currency}
-        onChange={(event, newValue) => {
+        onChange={(_event, newValue) => {
           setCurrency(newValue || '');
         }}
         inputValue={currency}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_event, newInputValue) => {
           setCurrency(newInputValue);
         }}
         options={options}
