@@ -20,11 +20,15 @@ export function App() {
   const { data: currencies, isLoading: isLoadingCurrencies } = useGetSupportedCurrenciesQuery({});
 
   const currenciesList = currencies || [];
+  const isCurrencyValid = (currency: string) => currenciesList.includes(currency);
 
   const currenciesString = `${currency1},${currency2}`;
-  const { data: conversionRates, isLoading: isLoadingRates } = useGetConversionRateQuery({
-    currencies: currenciesString
-  });
+  const { data: conversionRates, isLoading: isLoadingRates } = useGetConversionRateQuery(
+    {
+      currencies: currenciesString
+    },
+    { skip: !isCurrencyValid(currency1) || !isCurrencyValid(currency2) }
+  );
 
   useEffect(() => {
     if (conversionRates && conversionRates.data[currency2]) {

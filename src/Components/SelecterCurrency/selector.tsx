@@ -1,5 +1,6 @@
 import { Autocomplete, Box, TextField } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { FC, useState } from 'react';
 
 interface CurrencySelectorProps {
   currency: string;
@@ -7,19 +8,23 @@ interface CurrencySelectorProps {
   options: string[];
 }
 
-export function CurrencySelector({ currency, setCurrency, options }: CurrencySelectorProps) {
+export const CurrencySelector: FC<CurrencySelectorProps> = ({ currency, setCurrency, options }) => {
+  const [inputValue, setInputValue] = useState<string>('');
   return (
     <Box sx={{ minWidth: 200 }}>
       <Autocomplete
         value={currency}
         onChange={(_event, newValue) => {
-          setCurrency(newValue || '');
+          if (newValue) {
+            setCurrency(newValue);
+          }
         }}
-        inputValue={currency}
+        inputValue={inputValue}
         onInputChange={(_event, newInputValue) => {
-          setCurrency(newInputValue);
+          setInputValue(newInputValue);
         }}
         options={options}
+        disableClearable
         renderInput={(params) => (
           <TextField
             {...params}
@@ -50,4 +55,4 @@ export function CurrencySelector({ currency, setCurrency, options }: CurrencySel
       />
     </Box>
   );
-}
+};
