@@ -40,7 +40,7 @@ export function CurrencySelector({ currency, setCurrency, options }: CurrencySel
                 color: grey[500]
               },
               '&.Mui-focused label': {
-                color: '#4c4efd'
+                color: '#0d47a1'
               }
             }}
           />

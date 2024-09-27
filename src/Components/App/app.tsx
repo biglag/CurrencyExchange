@@ -1,20 +1,24 @@
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { Box, Button, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetConversionRateQuery } from '../../services/currencyApi';
 import { useGetSupportedCurrenciesQuery } from '../../services/listApi';
 import Input from '../AmountInput/index';
+import { ExchangeRate } from '../ExchangeRate/ExchangeRate';
 import Header from '../Header/index';
 import { CurrencySelector } from '../SelecterCurrency/selector';
+import { MyTimer } from '../Timer/UpdateTimer';
 
 export function App() {
   const [currency1, setCurrency1] = useState<string>('USD');
   const [currency2, setCurrency2] = useState<string>('EUR');
   const [amount, setAmount] = useState<number>(1);
+  const [lastUpdate, setLastUpdate] = useState<string>('');
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
 
   const { data: currencies, isLoading: isLoadingCurrencies } = useGetSupportedCurrenciesQuery({});
+
   const currenciesList = currencies || [];
 
   const currenciesString = `${currency1},${currency2}`;
@@ -22,11 +26,17 @@ export function App() {
     currencies: currenciesString
   });
 
-  const handleSwap = () => {
-    if (conversionRates && conversionRates[currency2]) {
-      const rate = conversionRates[currency2].value;
+  useEffect(() => {
+    if (conversionRates && conversionRates.data[currency2]) {
+      const rate = parseFloat(conversionRates.data[currency2].value.toFixed(2));
+      setLastUpdate(conversionRates.meta.last_updated_at);
       setConvertedAmount(amount * rate);
     }
+  }, [conversionRates, amount, currency2]);
+
+  const handleSwap = () => {
+    setCurrency1(currency2);
+    setCurrency2(currency1);
   };
 
   return (
@@ -62,12 +72,13 @@ export function App() {
           <Input
             amount={amount}
             setAmount={setAmount}
+            readOnly={false}
           />
         </Grid>
       </Grid>
       <Button
         onClick={handleSwap}
-        sx={{ mb: 2, backgroundColor: '#1f2766', color: 'white', '&:hover': { backgroundColor: '#151e44' } }}
+        sx={{ mb: 2, backgroundColor: '#0d47a1', color: 'white', '&:hover': { backgroundColor: '#151e44' } }}
         startIcon={<SyncAltIcon />}
       >
         <Typography
@@ -93,19 +104,18 @@ export function App() {
           <Input
             amount={convertedAmount || 0}
             setAmount={setConvertedAmount}
+            readOnly
           />
         </Grid>
       </Grid>
       {isLoadingCurrencies && <Typography>Loading currencies...</Typography>}
       {isLoadingRates && <Typography>Loading conversion rates...</Typography>}
-      {convertedAmount !== null && (
-        <Typography
-          variant='h6'
-          sx={{ marginTop: '10px' }}
-        >
-          Converted Amount: {convertedAmount.toFixed(2)} {currency2}
-        </Typography>
-      )}
+      <ExchangeRate
+        currency1={currency1}
+        currency2={currency2}
+        rate={conversionRates?.data[currency2]?.value.toFixed(2)}
+      />
+      {lastUpdate && <MyTimer lastUpdate={lastUpdate} />}
     </Box>
   );
 }

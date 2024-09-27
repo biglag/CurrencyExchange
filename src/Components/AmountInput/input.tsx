@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 interface InputProps {
   amount: number;
   setAmount: (value: number) => void;
+  readOnly: boolean;
 }
-export function Input({ amount, setAmount }: InputProps) {
+export function Input({ amount, setAmount, readOnly }: InputProps) {
   const [value, setValue] = useState<number | ''>('');
   const [error, setError] = useState<boolean>(false);
 
@@ -58,7 +59,7 @@ export function Input({ amount, setAmount }: InputProps) {
             backgroundColor: grey[300]
           }
         }}
-        InputProps={{ style: { border: 'none' } }}
+        inputProps={{ readOnly: readOnly }}
       />
     </Box>
   );

@@ -3,6 +3,9 @@ import { axiosBaseQuery } from './customAxiosBaseQuery';
 
 const API_KEY = 'cur_live_nIMSMjmfY9BaeAh2vTW8HDOEKEPo2e1LufYdVi2i';
 interface ApiResponse {
+  meta: {
+    last_updated_at: string;
+  };
   data: {
     [currency: string]: {
       value: number;
@@ -25,7 +28,12 @@ export const currencyRateApi = createApi({
           currencies
         }
       }),
-      transformResponse: (response: ApiResponse) => response.data
+      transformResponse: (response: ApiResponse) => {
+        return {
+          data: response.data,
+          meta: response.meta
+        };
+      }
     })
   })
 });
