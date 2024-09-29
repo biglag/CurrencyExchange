@@ -5,13 +5,13 @@ import { useTimer } from 'react-timer-hook';
 interface MyTimerProps {
   lastUpdate: string;
 }
-function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
+function CircularProgressWithLabel(props: CircularProgressProps & { value: number; hours: number }) {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
       <CircularProgress
         variant='determinate'
         sx={{ color: blue[900] }}
-        {...props}
+        value={props.value}
       />
       <Box
         sx={{
@@ -29,7 +29,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
           variant='caption'
           component='div'
           sx={{ color: 'text.secondary' }}
-        >{`${Math.round(props.value)}h`}</Typography>
+        >{`${Math.round(props.hours)}h`}</Typography>
       </Box>
     </Box>
   );
@@ -38,15 +38,20 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 export const MyTimer: React.FC<MyTimerProps> = ({ lastUpdate }) => {
   const expiryTime = new Date(lastUpdate);
   expiryTime.setHours(expiryTime.getHours() + 24);
-
   const { hours } = useTimer({
     expiryTimestamp: expiryTime,
     onExpire: () => console.warn('Timer expired')
   });
-
+  const totalDuration = 24 * 60 * 60 * 1000;
+  const currentTime = Date.now();
+  const timeRemaining = expiryTime.getTime() - currentTime;
+  const percentage = (timeRemaining / totalDuration) * 100;
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-      <CircularProgressWithLabel value={hours} />
+      <CircularProgressWithLabel
+        value={percentage}
+        hours={hours}
+      />
       <Typography
         variant='body1'
         sx={{ fontWeight: 'bold', marginLeft: '10px', color: '#0d47a1' }}
