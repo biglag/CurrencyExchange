@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
 import { useGetConversionRateQuery } from '../../services/currencyApi';
 import { useGetSupportedCurrenciesQuery } from '../../services/listApi';
-import { Input } from '../AmountInput/AmountInput';
+import Input from '../AmountInput';
 import ExchangeRate from '../ExchangeRate';
 import Header from '../Header';
 
