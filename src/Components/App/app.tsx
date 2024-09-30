@@ -6,8 +6,9 @@ import { useGetConversionRateQuery } from '../../services/currencyApi';
 import { useGetSupportedCurrenciesQuery } from '../../services/listApi';
 import { Input } from '../AmountInput/AmountInput';
 import ExchangeRate from '../ExchangeRate';
-import { Header } from '../Header/Header';
-import { CurrencySelector } from '../SelecterCurrency/Selector';
+import Header from '../Header';
+
+import CurrencySelector from '../SelecterCurrency';
 import { MyTimer } from '../Timer/UpdateTimer';
 
 export function App() {
