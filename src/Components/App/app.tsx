@@ -19,8 +19,8 @@ export function App() {
 
   const { data: currencies, isLoading: isLoadingCurrencies } = useGetSupportedCurrenciesQuery({});
 
-  const currenciesList = currencies || [];
-  const isCurrencyValid = (currency: string) => currenciesList.includes(currency);
+  const currenciesList = (currencies || []).map((currency) => ({ code: currency, name: currency }));
+  const isCurrencyValid = (currency: string) => currenciesList.some((c) => c.code === currency);
 
   const currenciesString = `${currency1},${currency2}`;
   const { data: conversionRates, isLoading: isLoadingRates } = useGetConversionRateQuery(

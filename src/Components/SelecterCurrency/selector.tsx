@@ -5,7 +5,7 @@ import { FC, useState } from 'react';
 interface CurrencySelectorProps {
   currency: string;
   setCurrency: (currency: string) => void;
-  options: string[];
+  options: Array<{ code: string; name: string }>;
 }
 
 export const CurrencySelector: FC<CurrencySelectorProps> = ({ currency, setCurrency, options }) => {
@@ -23,8 +23,29 @@ export const CurrencySelector: FC<CurrencySelectorProps> = ({ currency, setCurre
         onInputChange={(_event, newInputValue) => {
           setInputValue(newInputValue);
         }}
-        options={options}
+        options={options.map((option) => option.code)}
         disableClearable
+        renderOption={(props, option) => {
+          const countryCode = option.slice(0, 2).toLowerCase();
+
+          return (
+            <Box
+              component='li'
+              sx={{ display: 'flex', alignItems: 'center' }}
+              {...props}
+            >
+              <img
+                loading='lazy'
+                width='20'
+                src={`https://flagcdn.com/w20/${countryCode}.png`}
+                srcSet={`https://flagcdn.com/w40/${countryCode}.png 2x`}
+                alt=''
+                style={{ marginRight: '10px' }}
+              />
+              {`${options.find((opt) => opt.code === option)?.name} (${option})`}
+            </Box>
+          );
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
