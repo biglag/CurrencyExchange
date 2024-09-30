@@ -2,12 +2,12 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { Box, Button, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
-import Input from '../../Components/AmountInput/index';
 import { useGetConversionRateQuery } from '../../services/currencyApi';
 import { useGetSupportedCurrenciesQuery } from '../../services/listApi';
+import { Input } from '../AmountInput/AmountInput';
 import ExchangeRate from '../ExchangeRate';
-import Header from '../Header/index';
-import CurrencySelector from '../SelecterCurrency';
+import { Header } from '../Header/Header';
+import { CurrencySelector } from '../SelecterCurrency/Selector';
 import { MyTimer } from '../Timer/UpdateTimer';
 
 export function App() {
