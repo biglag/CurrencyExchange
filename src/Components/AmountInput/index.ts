@@ -1,3 +1,3 @@
-import { Input } from './input';
+import { Input } from './AmountInput';
 
 export default Input;

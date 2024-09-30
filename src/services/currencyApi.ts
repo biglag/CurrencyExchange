@@ -20,12 +20,13 @@ export const currencyRateApi = createApi({
   }),
   endpoints: (builder) => ({
     getConversionRate: builder.query({
-      query: ({ currencies }: { currencies: string }) => ({
+      query: ({ currencies, base_currency }: { currencies: string; base_currency: string }) => ({
         url: 'latest',
         method: 'GET',
         params: {
           apikey: API_KEY,
-          currencies
+          currencies,
+          base_currency
         }
       }),
       transformResponse: (response: ApiResponse) => {

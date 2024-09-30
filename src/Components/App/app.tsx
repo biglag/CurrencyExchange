@@ -2,12 +2,12 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { Box, Button, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
+import Input from '../../Components/AmountInput/index';
 import { useGetConversionRateQuery } from '../../services/currencyApi';
 import { useGetSupportedCurrenciesQuery } from '../../services/listApi';
-import Input from '../AmountInput/index';
-import { ExchangeRate } from '../ExchangeRate/ExchangeRate';
+import ExchangeRate from '../ExchangeRate';
 import Header from '../Header/index';
-import { CurrencySelector } from '../SelecterCurrency/selector';
+import CurrencySelector from '../SelecterCurrency';
 import { MyTimer } from '../Timer/UpdateTimer';
 
 export function App() {
@@ -22,21 +22,21 @@ export function App() {
   const currenciesList = (currencies || []).map((currency) => ({ code: currency, name: currency }));
   const isCurrencyValid = (currency: string) => currenciesList.some((c) => c.code === currency);
 
-  const currenciesString = `${currency1},${currency2}`;
   const { data: conversionRates, isLoading: isLoadingRates } = useGetConversionRateQuery(
     {
-      currencies: currenciesString
+      currencies: currency2,
+      base_currency: currency1
     },
     { skip: !isCurrencyValid(currency1) || !isCurrencyValid(currency2) }
   );
 
   useEffect(() => {
     if (conversionRates && conversionRates.data[currency2]) {
-      const rate = parseFloat(conversionRates.data[currency2].value.toFixed(2));
+      const rate2 = parseFloat(conversionRates.data[currency2].value.toFixed(2));
       setLastUpdate(conversionRates.meta.last_updated_at);
-      setConvertedAmount(amount * rate);
+      setConvertedAmount(rate2 * amount);
     }
-  }, [conversionRates, amount, currency2]);
+  }, [conversionRates, amount, currency2, convertedAmount, currency1]);
 
   const handleSwap = () => {
     setCurrency1(currency2);
